@@ -5,17 +5,20 @@
 
 struct Player
 {
-  Cave cave;
+  Cave *cave;
   bool alive;
   Room *currentRoom;
   int arrows;
 
 public:
   Player(Cave);
-  void Action();
-  void Display();
-  
+  void Turn();
+
 private:
   void CheckHazards();
+  void Action();
+  void Display();
+  void Move(int);
+  bool Shoot();
 };
 #endif

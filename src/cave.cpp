@@ -52,7 +52,8 @@ Cave::Cave()
   for (int i = 0; i < 2; i++)
   {
     int batLoc;
-    do {
+    do
+    {
       batLoc = rand() % caveSize;
     } while (rooms[batLoc].wumpus || rooms[batLoc].pit || rooms[batLoc].bat);
     rooms[batLoc].bat = true;
