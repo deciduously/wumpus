@@ -59,3 +59,24 @@ Cave::Cave()
     rooms[batLoc].bat = true;
   }
 }
+
+//returns the id of the new room for collision check
+int Cave::MoveWumpus()
+{
+  //find wumpus
+  Room *wumpusRoom;
+  for (auto room : rooms)
+  {
+    if (room.wumpus)
+      wumpusRoom = &room;
+  }
+  //choose direction
+  int randomExit = rand() % 3;
+  Room *newWumpusRoom = &rooms[wumpusRoom->exits[randomExit]];
+
+  //move wumpus
+  wumpusRoom->wumpus = false;
+  newWumpusRoom->wumpus = true;
+
+  return newWumpusRoom->id;
+}

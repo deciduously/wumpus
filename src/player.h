@@ -19,6 +19,6 @@ private:
   void Action();
   void Display();
   void Move(int);
-  bool Shoot(int);
+  void Shoot(int);
 };
 #endif

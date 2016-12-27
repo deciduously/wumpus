@@ -29,20 +29,7 @@ void Player::Action()
   if (choice == 'm')
     Player::Move(num);
   else if (choice == 's')
-  {
-    if (Player::Shoot(num))
-    {
-      std::cout << "With a sickening, satisfying thwack, your arrow finds its mark.  You're gonna eat you a WUMPUS tonight!  Good game." << std::endl;
-      alive = false;
-    }
-    else
-    {
-      std::cout << "Your arrow whistles aimlessly into the void.";
-      if (arrows <= 0)
-        std::cout <<std::endl << "You fired your very last arrow - you are now wumpus food."<<std::endl;
-      //TODO 75% chance you scare the wumpus
-    }
-  }
+    Player::Shoot(num);
 }
 
 void Player::CheckHazards()
@@ -62,7 +49,7 @@ void Player::CheckHazards()
 void Player::Display()
 {
   std::cout << "You are in room " << currentRoom->id << " holding ";
-  (arrows > 1) ? std::cout<< arrows << " arrows." << std::endl : std::cout<<"one arrow."<<std::endl;
+  (arrows > 1) ? std::cout << arrows << " arrows." << std::endl : std::cout << "one arrow." << std::endl;
   std::cout << "Exits: ";
   for (auto exit : currentRoom->exits)
     std::cout << exit << " ";
@@ -81,7 +68,7 @@ void Player::Move(int n)
   else if (currentRoom->pit)
   {
     alive = false;
-    std::cout << "You have walked straight into a gaping pit and now must wait to die, bloodied and broken, with no hope of rescue." << std::endl;
+    std::cout << "You have fallen into a gaping pit and now must wait to die, bloodied and broken, with no hope of rescue." << std::endl;
   }
   else if (currentRoom->bat)
   {
@@ -101,16 +88,43 @@ void Player::Move(int n)
   }
 }
 
-bool Player::Shoot(int n)
+void Player::Shoot(int n)
 {
   if (cave->rooms[n - 1].wumpus)
-    return true;
-  --arrows;
-  if (arrows <= 0)
   {
+    std::cout << "With a sickening, satisfying thwack, your arrow finds its mark.  You're gonna eat you a WUMPUS tonight!  Good game." << std::endl;
     alive = false;
   }
-  return false;
+  else
+  {
+    --arrows;
+    std::cout << "Your arrow whistles aimlessly into the void.";
+    if (arrows <= 0)
+    {
+      alive = false;
+      std::cout << std::endl
+                << "You fired your very last arrow - you are now wumpus food." << std::endl;
+    }
+    //75% chance you scare the wumpus into an adjacent cell
+    int dieRoll = rand() % 4;
+    if (dieRoll == 0)
+    {
+      std::cout << std::endl
+                << "You listen quietly for any sign of movement - but the cave remains still.";
+    }
+    else
+    {
+      std::cout << std::endl
+                << "You hear a deafening roar - you've disturbed the wumpus!";
+      int newLoc = cave->MoveWumpus();
+      if (newLoc == currentRoom->id)
+      {
+        alive = false;
+        std::cout << std::endl
+                  << "You have been eaten slowly and painfully by the wumpus." << std::endl;
+      }
+    }
+  }
 }
 
 void Player::Turn()

@@ -16,5 +16,6 @@ struct Cave
 
 public:
   Cave();
+  int MoveWumpus();
 };
 #endif
