@@ -1,2 +1,2 @@
-# wumpus
-Hunt the Wumpus!
+# Wumpus
+Hunt yourself a wumpus - feed the family!
