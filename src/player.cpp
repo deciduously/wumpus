@@ -29,7 +29,20 @@ void Player::Action()
   if (choice == 'm')
     Player::Move(num);
   else if (choice == 's')
-    Player::Shoot();
+  {
+    if (Player::Shoot(num))
+    {
+      std::cout << "With a sickening, satisfying thwack, your arrow finds its mark.  You're gonna eat you a WUMPUS tonight!  Good game." << std::endl;
+      alive = false;
+    }
+    else
+    {
+      std::cout << "Your arrow whistles aimlessly into the void.";
+      if (arrows <= 0)
+        std::cout <<std::endl << "You fired your very last arrow - you are now wumpus food."<<std::endl;
+      //TODO 75% chance you scare the wumpus
+    }
+  }
 }
 
 void Player::CheckHazards()
@@ -48,7 +61,8 @@ void Player::CheckHazards()
 
 void Player::Display()
 {
-  std::cout << "You are in room " << currentRoom->id << std::endl;
+  std::cout << "You are in room " << currentRoom->id << " holding ";
+  (arrows > 1) ? std::cout<< arrows << " arrows." << std::endl : std::cout<<"one arrow."<<std::endl;
   std::cout << "Exits: ";
   for (auto exit : currentRoom->exits)
     std::cout << exit << " ";
@@ -87,14 +101,22 @@ void Player::Move(int n)
   }
 }
 
-bool Player::Shoot()
+bool Player::Shoot(int n)
 {
-  return false; //for now
+  if (cave->rooms[n - 1].wumpus)
+    return true;
+  --arrows;
+  if (arrows <= 0)
+  {
+    alive = false;
+  }
+  return false;
 }
 
 void Player::Turn()
 {
-  std::cout << std::endl;
+  std::cout << std::endl
+            << "---------------------------------------------------------------------" << std::endl;
   Player::Display();
   Player::Action();
 }
